@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\v1\AuthController;
+use App\Http\Controllers\api\v1\PenjualanController;
 use App\Http\Controllers\api\v1\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +38,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/insert', [ProductController::class, 'insert']);
             Route::put('/{id}', [ProductController::class, 'update']);
             Route::delete('/{id}', [ProductController::class, 'delete']);
+        });
+        Route::prefix('/penjualan')->group(function () {
+            Route::get('/{date}/{company}/penjualan', [PenjualanController::class, 'PenjualanByDate']);
         });
     });
 });
