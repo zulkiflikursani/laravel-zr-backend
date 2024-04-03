@@ -17,6 +17,7 @@ class PenjualanModel extends Model
         'id_customer',
         'product_id',
         'nama_product',
+        'qty',
         'hjual'
     ];
 }

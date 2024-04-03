@@ -41,6 +41,8 @@ Route::middleware('auth:sanctum')->group(function () {
         });
         Route::prefix('/penjualan')->group(function () {
             Route::get('/{date}/{company}/penjualan', [PenjualanController::class, 'PenjualanByDate']);
+            Route::post('/insert', [PenjualanController::class, 'store']);
+            Route::get('/{id}', [PenjualanController::class, 'PenjualanByKodePenjualan']);
         });
     });
 });
