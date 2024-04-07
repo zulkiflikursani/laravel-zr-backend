@@ -3,50 +3,44 @@
 namespace App\Http\Controllers\api\v1;
 
 use App\Http\Controllers\Controller;
-use App\Models\PenjualanModel;
+use App\Models\PembelianModel;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Str;
 
-class PenjualanController extends Controller
+class PembelianController extends Controller
 {
-    //
-    public function index()
+    public function PembelianByDate($date, $company)
     {
-        return "Hello";
-    }
-
-    public function PenjualanByDate($date, $company)
-    {
-        $Penjualan = PenjualanModel::whereDate('tanggal_transaksi', $date)
+        $Penjualan = PembelianModel::whereDate('tanggal_transaksi', $date)
             ->where('company', $company)->get();
 
         return $Penjualan;
     }
-
+    //
     public function store(Request $request)
     {
         $rules = [
             "*.company" => "required",
-            "*.kode_penjualan" => "required",
+            "*.kode_pembelian" => "required",
             '*.tanggal_transaksi' => 'required',
             '*.id_customer' => '',
             "*.product_id" => "required",
             '*.nama_product' => 'required',
             '*.qty' => 'required',
-            '*.hjual' => 'required'
+            '*.hbeli' => 'required'
         ];
         $message =  [
             "company.required" => "Nama Perusahaan tidak ditentukan",
-            "kode_penjualan.required" => "Silahkan Masukkan kode penjualan",
+            "kode_pembelian.required" => "Silahkan Masukkan kode penjualan",
             'tanggal_transaksi.required' => 'Silahkan masukkan tanggal transaksi',
             'id_customer.required' => 'Silahkan masukakan kode kostumer',
             "product_id.required" => "Silahkan masukkan product id",
             'nama_product.required' => 'Silahkan masukkan nama product',
-            'qty.required' => 'Silahkan masukkan harga jual',
-            'hjual.required' => 'Silahkan masukkan harga jual'
+            'qty.required' => 'Silahkan masukkan kuantitas',
+            'hbeli.required' => 'Silahkan masukkan harga beli'
 
         ];
 
@@ -56,34 +50,34 @@ class PenjualanController extends Controller
                 'errors' => $validator->errors()
             ]);
         } else {
-            $requsetData = $request->json()->all();
-            $kode_penjualan_generate = Str::random(5);
+            $requestData = $request->json()->all();
+            $kode_pembelian_generate = Str::random(5);
             DB::beginTransaction();
             try {
-                foreach ($requsetData as $row) {
+                foreach ($requestData as $row) {
                     $company = $row['company'];
-                    $kode_penjualan = $kode_penjualan_generate;
+                    $kode_pembelian = $kode_pembelian_generate;
                     $tanggal_transaksi = $row['tanggal_transaksi'];
                     $id_customer = $row['id_customer'];
                     $product_id = $row['product_id'];
                     $nama_product = $row['nama_product'];
                     $qty = $row['qty'];
-                    $hjual = $row['hjual'];
+                    $hbeli = $row['hbeli'];
 
-                    PenjualanModel::create([
+                    PembelianModel::create([
                         "company" => $company,
-                        "kode_penjualan" => $kode_penjualan,
+                        "kode_pembelian" => $kode_pembelian,
                         'tanggal_transaksi' => $tanggal_transaksi,
                         'id_customer' => $id_customer,
                         "product_id" => $product_id,
                         'nama_product' => $nama_product,
                         'qty' => $qty,
-                        'hjual' => $hjual
+                        'hbeli' => $hbeli
                     ]);
                 };
                 DB::commit();
                 return Response([
-                    'message' => 'Berhasil Menyimpan data penjualan',
+                    'message' => 'Berhasil Menyimpan data pembelian ',
                     'status' => 'ok'
                 ]);
             } catch (QueryException $e) { // Catch QueryException
@@ -105,35 +99,36 @@ class PenjualanController extends Controller
         }
     }
 
-    public function PenjualanByKodePenjualan($id)
+    public function PembelianByKodePembelian($id)
     {
-        $Penjualan = PenjualanModel::where('kode_penjualan', $id)->get();
+        $Pembelian = PembelianModel::where('kode_pembelian', $id)->get();
 
-        return $Penjualan;
+        return $Pembelian;
     }
 
-    public function update(Request $request, $kode_penjualan)
+
+    public function update(Request $request, $kode_pembelian)
     {
 
         $rules = [
             "*.company" => "required",
-            "*.kode_penjualan" => "required",
+            "*.kode_pembelian" => "required",
             '*.tanggal_transaksi' => 'required',
             '*.id_customer' => '',
             "*.product_id" => "required",
             '*.nama_product' => 'required',
             '*.qty' => 'required',
-            '*.hjual' => 'required'
+            '*.hbeli' => 'required'
         ];
         $message =  [
             "company.required" => "Nama Perusahaan tidak ditentukan",
-            "kode_penjualan.required" => "Silahkan Masukkan kode penjualan",
+            "kode_pembelian.required" => "Silahkan Masukkan kode pembelian",
             'tanggal_transaksi.required' => 'Silahkan masukkan tanggal transaksi',
             'id_customer.required' => 'Silahkan masukakan kode kostumer',
             "product_id.required" => "Silahkan masukkan product id",
             'nama_product.required' => 'Silahkan masukkan nama product',
-            'qty.required' => 'Silahkan masukkan harga jual',
-            'hjual.required' => 'Silahkan masukkan harga jual'
+            'qty.required' => 'Silahkan masukkan kuantitas',
+            'hbeli.required' => 'Silahkan masukkan harga beli'
 
         ];
 
@@ -146,16 +141,16 @@ class PenjualanController extends Controller
             $requestData = $request->json()->all();
             DB::beginTransaction();
             try {
-                $deletePenjualan = PenjualanModel::where('kode_penjualan', $kode_penjualan)->delete();
-                if (!$deletePenjualan) {
+                $deletePembelian = PembelianModel::where('kode_pembelian', $kode_pembelian)->delete();
+                if (!$deletePembelian) {
                     DB::rollBack();
                     return Response([
                         'message' => 'Kode Penjualan tidak ditemukan',
                         'status' => 'gagal'
                     ]);
                 }
-                foreach ($requestData as $row) {                  // Find all records with the specified kode_penjualan
-                    $newData = PenjualanModel::create($row);
+                foreach ($requestData as $row) {
+                    $newData = PembelianModel::create($row);
                     if (!$newData) {
                         DB::rollBack();
                         return Response([
@@ -167,7 +162,7 @@ class PenjualanController extends Controller
                 }
                 DB::commit();
                 return Response([
-                    "message" => 'Berhasil Mengupdate Data Penjualan !',
+                    "message" => 'Berhasil Mengupdate Data Pembelian !',
                     "status" => 'ok',
                 ]);
             } catch (\Exception $e) {

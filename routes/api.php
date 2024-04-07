@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\api\v1\AuthController;
+use App\Http\Controllers\api\v1\PembelianController;
 use App\Http\Controllers\api\v1\PenjualanController;
 use App\Http\Controllers\api\v1\ProductController;
 use Illuminate\Http\Request;
@@ -43,6 +44,13 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/{date}/{company}/penjualan', [PenjualanController::class, 'PenjualanByDate']);
             Route::post('/insert', [PenjualanController::class, 'store']);
             Route::get('/{id}', [PenjualanController::class, 'PenjualanByKodePenjualan']);
+            Route::put('/{kode_penjualan}', [PenjualanController::class, 'update']);
+        });
+        Route::prefix('/pembelian')->group(function () {
+            Route::get('/{date}/{company}/pembelian', [PembelianController::class, 'PembelianByDate']);
+            Route::post('/insert', [PembelianController::class, 'store']);
+            Route::get('/{id}', [PembelianController::class, 'PembelianByKodePembelian']);
+            Route::put('/{kode_pembelian}', [PembelianController::class, 'update']);
         });
     });
 });
