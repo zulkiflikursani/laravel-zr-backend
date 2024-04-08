@@ -114,6 +114,12 @@ class PenjualanController extends Controller
 
     public function update(Request $request, $kode_penjualan)
     {
+        // print_r($request->all());
+        $dataRequest = $request->all();
+
+        unset($dataRequest['_method']);
+
+
 
         $rules = [
             "*.company" => "required",
@@ -136,8 +142,7 @@ class PenjualanController extends Controller
             'hjual.required' => 'Silahkan masukkan harga jual'
 
         ];
-
-        $validator = Validator::make($request->all(), $rules, $message);
+        $validator = Validator::make($dataRequest, $rules, $message);
         if ($validator->fails()) {
             return Response([
                 'errors' => $validator->errors()
