@@ -26,6 +26,19 @@ class PenjualanController extends Controller
         return $Penjualan;
     }
 
+    public function getTotalPenjualanByDate($date, $company)
+    {
+        $Penjualan = PenjualanModel::whereDate('tanggal_transaksi', $date)
+            ->where('company', $company)->select(DB::raw('SUM(qty) as totalQty'), DB::raw('SUM(qty * hjual) as total_value',))
+            ->first();
+        return Response([
+            'total_penjualan' => $Penjualan->total_value,
+            'total_qty' => $Penjualan->totalQty
+        ]);
+    }
+
+
+
     public function store(Request $request)
     {
         $rules = [
@@ -118,9 +131,6 @@ class PenjualanController extends Controller
         $dataRequest = $request->all();
 
         unset($dataRequest['_method']);
-
-
-
         $rules = [
             "*.company" => "required",
             "*.kode_penjualan" => "required",

@@ -72,6 +72,9 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+        $dataRequest = $request->all();
+
+        unset($dataRequest['_method']);
         $request->validate([
             "company" => 'required',
             "nama" => 'required',

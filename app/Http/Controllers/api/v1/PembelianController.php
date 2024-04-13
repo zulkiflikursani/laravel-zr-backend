@@ -19,7 +19,15 @@ class PembelianController extends Controller
 
         return $Penjualan;
     }
-    //
+    public function getTotalPembelianByDate($date, $company)
+    {
+
+        $Pembelian = PembelianModel::whereDate('tanggal_transaksi', $date)->where('company', $company)->select(DB::raw('sum(hbeli) as total_pembelian'), DB::raw('sum(qty) as total_qty'))->first();
+        return Response([
+            'total_pembelian' => $Pembelian->total_pembelian,
+            'total_qty' => $Pembelian->total_qty
+        ]);
+    }
     public function store(Request $request)
     {
         $rules = [
@@ -109,7 +117,9 @@ class PembelianController extends Controller
 
     public function update(Request $request, $kode_pembelian)
     {
+        $dataRequest = $request->all();
 
+        unset($dataRequest['_method']);
         $rules = [
             "*.company" => "required",
             "*.kode_pembelian" => "required",
@@ -132,7 +142,7 @@ class PembelianController extends Controller
 
         ];
 
-        $validator = Validator::make($request->all(), $rules, $message);
+        $validator = Validator::make($dataRequest, $rules, $message);
         if ($validator->fails()) {
             return Response([
                 'errors' => $validator->errors()
