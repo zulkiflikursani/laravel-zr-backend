@@ -20,4 +20,9 @@ class PenjualanModel extends Model
         'qty',
         'hjual'
     ];
+    protected $casts = [
+        'hjual' => 'integer',
+        'qty' => 'integer',
+
+    ];
 }

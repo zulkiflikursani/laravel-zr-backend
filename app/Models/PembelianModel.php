@@ -20,4 +20,9 @@ class PembelianModel extends Model
         'qty',
         'hbeli'
     ];
+    protected $casts = [
+        'qty' => 'integer',
+        'hbeli' => 'integer',
+
+    ];
 }

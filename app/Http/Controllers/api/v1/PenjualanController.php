@@ -156,6 +156,7 @@ class PenjualanController extends Controller
         if ($validator->fails()) {
             return Response([
                 'errors' => $validator->errors()
+
             ]);
         } else {
             $requestData = $request->json()->all();

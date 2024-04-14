@@ -20,4 +20,9 @@ class ProductModel extends Model
         'hjual',
         'nama',
     ];
+    protected $casts = [
+        'hjual' => 'integer',
+        'hbeli' => 'integer',
+
+    ];
 }

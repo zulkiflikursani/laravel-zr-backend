@@ -22,7 +22,7 @@ class ProductController extends Controller
             $products = ProductModel::where('company', $company)->get();
             return $products;
         } else {
-            return $company;
+            return null;
         }
     }
     public function productById(string $id, string $company)
